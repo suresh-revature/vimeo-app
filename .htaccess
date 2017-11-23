@@ -1,0 +1,71 @@
+<ifModule mod_rewrite.c>
+# Turn mod_rewrite on
+Options +FollowSymLinks -MultiViews
+RewriteEngine On
+
+# allow social media crawlers to work by redirecting them to a server-rendered static version on the page
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit/[0-9]|Twitterbot|Pinterest|LinkedInBot|Slackbot\s[0-9\.]|Slackbot-LinkExpanding\s[0-9\.]) [NC,OR]
+RewriteCond %{QUERY_STRING} _escaped_fragment_
+RewriteRule ^(?!.*?(\.js|\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff))(.*) http://service.prerender.io/https://%{HTTP_HOST}/$2 [P,L]
+
+# Required to allow direct-linking of pages so they can be processed by Angular
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !index
+RewriteRule ^(.*)$ index.html [L]
+</ifModule>
+<IfModule mod_headers.c>
+	RequestHeader set X-Prerender-Token "OyBH63A78MiqWjPgudpv"
+    Header set X-XSS-Protection: "1; mode=block"
+	Header always append X-Frame-Options SAMEORIGIN
+	Header set X-Content-Type-Options nosniff
+
+</IfModule>
+
+<IfModule mod_deflate.c>
+ SetOutputFilter DEFLATE
+
+# Force compression for mangled headers.
+# http://developer.yahoo.com/blogs/ydn/posts/2010/12/pushing-beyond-gzipping
+<IfModule mod_setenvif.c>
+<IfModule mod_headers.c>
+SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+</IfModule>
+</IfModule>
+
+
+# Compress all output labeled with one of the following MIME-types
+# (for Apache versions below 2.3.7, you don't need to enable `mod_filter`
+#  and can remove the `<IfModule mod_filter.c>` and `</IfModule>` lines
+#  as `AddOutputFilterByType` is still in the core directives).
+
+<IfModule mod_filter.c>
+AddOutputFilterByType DEFLATE application/atom+xml \
+text/javascript \
+application/javascript \
+application/json \
+application/rss+xml \
+application/vnd.ms-fontobject \
+application/x-font-ttf \
+application/x-web-app-manifest+json \
+application/xhtml+xml \
+application/xml \
+font/opentype \
+image/svg+xml \
+image/x-icon \
+text/css \
+text/html \
+text/plain \
+text/x-component \
+text/xml
+</IfModule>
+</IfModule>
+
+# This section enables browser caching.
+<IfModule mod_headers.c>
+	<filesMatch "(.(jpg|jpeg|gif|svg|png|js|css)$)">
+		# Expire after 1 year
+		Header set Cache-Control "max-age=31536000, public"
+	</filesMatch>
+</IfModule>

@@ -1,0 +1,40 @@
+<div class="container">
+	<h1>Vimeo App - Home</h1>
+
+	<div class="col-xs-12">
+		<div class="form-group">
+			<div class="col-lg-3">
+				<div class="input-group">
+					<select class="form-control" ng-model="videoId">
+						<option value="">Select Video ID</option>
+						<option value="97501370">97501370</option>
+						<option value="115589525">115589525</option>
+					</select> <span class="input-group-btn">
+						<button class="btn btn-primary" type="button" tabindex="-1" ng-click="loadVideo()">
+							Load Video
+						</button>
+					</span>
+				</div>
+			</div>
+			<button class="btn btn-primary" type="button" ng-click="playVideo()">Play Video</button>
+			<button class="btn btn-primary" type="button" ng-click="pauseVideo()">Pause Video</button>
+			<button class="btn btn-primary" type="button" ng-click="seekVideo()">Seek Video</button>
+			<button class="btn btn-primary" type="button" ng-click="getDuration()">Get Duration</button>
+		</div>
+		<div class="form-group">
+			<iframe class="vimeo-bg" ng-src="{{dashboardVideoUrl | trusted}}" width="100%" height="540px" id="videoPlayer" webkitallowfullscreen mozallowfullscreen allowfullscreen data-ready="true"></iframe>
+		</div>
+	</div>
+
+	<div class="col-xs-12">
+		<div style="background: #fff; overflow-y: auto; resize: vertical;" id="transcriptDiv">
+			<div>
+				<h3 style="float: left; padding-right: 8px;" label="Transcript" tabindex="0">Transcript</h3>
+			</div>
+			<div class="clear-cus"></div>
+			<div class="col-lg-12" style="position: relative; border: 1px solid grey; max-height: 35vh; text-align: center; overflow-y: scroll; padding: 20px; cursor: pointer;" aria-labelledby="transcript" name="transcript" id="transcript" tabindex="0">
+				<div ng-if="transcript == null">There is no transcript associated with this video.</div>
+			</div>
+		</div>
+	</div>
+</div>

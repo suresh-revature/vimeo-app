@@ -1,0 +1,18 @@
+@charset "ISO-8859-1";
+
+.transcript {
+	text-align: left !important;
+	line-height: 31px;
+	font-size: 16px;
+}
+
+.highlight {
+	background: #E9F542;
+	color: #272121;
+	padding: 5px;
+}
+
+.vimeo-bg {
+    background: #000;
+    font-size: 17.5px;
+}
